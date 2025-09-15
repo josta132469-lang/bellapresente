@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Presente Confidencial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: black;
+      color: white;
+      text-align: center;
+      margin-top: 100px;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .caixa {
+      background: #111;
+      display: inline-block;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+      max-width: 450px;
+      transition: opacity 0.6s ease;
+      opacity: 1;
+      position: relative;
+    }
+    h1, h2, p { margin-bottom: 20px; }
+    .pedido {
+      background: #e91e63;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    .botoes {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      position: relative;
+    }
+    .botoes button {
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .sim { background: #4CAF50; color: white; }
+    .nao { background: #f44336; color: white; }
+    .surpresaBtn { background: #ff9800; color: white; margin-top: 20px; }
+
+    /* Botão secreto */
+    #botaoNao {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: white;
+      color: black;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.6;
+      display: none; /* 👉 escondido por padrão */
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes coracao {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
+    }
+    .coracao { position: absolute; font-size: 24px; color: #e91e63; animation: coracao 3s linear forwards; pointer-events: none; }
+    .gato { position: absolute; width: 60px; pointer-events: none; animation: coracao 3s linear forwards; }
+  </style>
+</head>
+<body>
+  <div class="caixa" id="conteudo"></div>
+  <button id="botaoNao" onclick="acessoSecreto()">não aperte</button>
+
+  <script>
+    const dataFinal = new Date('2028-01-21T00:00:00');
+    const senhaSecreta = "2114";
+
+    function trocarConteudo(novoHTML) {
+      document.getElementById("conteudo").innerHTML = novoHTML;
+    }
+
+    function telaInicial() {
+      trocarConteudo(`
+        <h2>Esse é um presente confidencial e exclusivo.<br>
+        Deseja abri-lo?</h2>
+        <div class="botoes">
+          <button onclick="mostrarGostos()">SIM</button>
+          <button onclick="alert('Ok, fica pra depois 😊')">NÃO</button>
+        </div>
+      `);
+    }
+
+    function mostrarGostos() {
+      trocarConteudo(`
+        <h1>💖 Isabelle 💖</h1>
+        <p>Algumas coisas que você gosta:</p>
+        <ul style="text-align:left; font-size:16px; line-height:1.6;">
+          <li>🐱 Gatos</li>
+          <li>🎬 Doramas</li>
+          <li>🌷 Tulipas</li>
+          <li>👨‍👩‍👧‍👦 Seus primos: Enzo Miguel, Arthur Miguel, Luiza e Théo</li>
+        </ul>
+        <button class="surpresaBtn" onclick="revelacaoFutura()">Surpresa Final 🎁</button>
+      `);
+    }
+
+    function revelacaoFutura() {
+      const agora = new Date();
+      if (agora >= dataFinal) {
+        mostrarPedido();
+      } else {
+        trocarConteudo(`
+          <h2>🎁 Surpresa Final 🎁</h2>
+          <p>O conteúdo final será revelado em <strong>21 de janeiro de 2028</strong></p>
+          <div id="timer"></div>
+        `);
+        atualizarTimer();
+        document.getElementById("botaoNao").style.display = "block"; // 👉 aparece só aqui
+      }
+    }
+
+    function atualizarTimer() {
+      const timer = document.getElementById("timer");
+      function atualizar() {
+        const agora = new Date();
+        const diff = dataFinal - agora;
+        if(diff > 0){
+          const dias = Math.floor(diff / (1000*60*60*24));
+          const horas = Math.floor((diff/(1000*60*60)) % 24);
+          const minutos = Math.floor((diff/(1000*60)) % 60);
+          const segundos = Math.floor((diff/1000) % 60);
+          timer.textContent = `⏳ Faltam ${dias}d ${horas}h ${minutos}m ${segundos}s para a surpresa final`;
+        } else {
+          timer.textContent = `🎉 A surpresa final está disponível! 🎉`;
+        }
+      }
+      atualizar();
+      setInterval(atualizar, 1000);
+    }
+
+    function acessoSecreto() {
+      const senha = prompt("Digite a senha secreta:");
+      if(senha === senhaSecreta){
+        mostrarPedido();
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+
+    function mostrarPedido() {
+      trocarConteudo(`
+        <h2 style="animation: fadeIn 1s forwards;">Você quer namorar comigo? 🌹</h2>
+        <div class="botoes">
+          <button id="btnSim" class="sim" onclick="respostaSim()">SIM</button>
+          <button id="btnNao" class="nao" onclick="respostaNao()">NÃO</button>
+        </div>
+      `);
+    }
+
+    function respostaSim() {
+      trocarConteudo(`
+        <h1 style="color:red;">😍 Finalmente oficial meu amor, sempre nós 😍</h1>
+        <p style="color:red;">Isabelle, você é meu mundo 💕</p>
+      `);
+      gerarCorações();
+      gerarGatinhos();
+    }
+
+    function respostaNao() {
+      trocarConteudo(`
+        <h1>😢 Que pena, Isabelle...</h1>
+        <p>Mas ainda continuo gostando muito de você 💖</p>
+      `);
+    }
+
+    function gerarCorações() {
+      const caixa = document.getElementById("conteudo");
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => {
+          const coracao = document.createElement("div");
+          coracao.className = "coracao";
+          coracao.innerHTML = "❤️";
+          coracao.style.left = Math.random() * 300 + "px";
+          coracao.style.top = "200px";
+          caixa.appendChild(coracao);
+          setTimeout(() => coracao.remove(), 3000);
+        }, i * 300);
+      }
+    }
+
+    function gerarGatinhos() {
+      const caixa = document.getElementById("conteudo");
+      const gifs = [
+        "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+        "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif",
+        "https://media.giphy.com/media/ICOgUNjpvO0PC/giphy.gif"
+      ];
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          const gato = document.createElement("img");
+          gato.className = "gato";
+          gato.src = gifs[Math.floor(Math.random() * gifs.length)];
+          gato.style.left = Math.random() * 300 + "px";
+          gato.style.top = "200px";
+          caixa.appendChild(gato);
+          setTimeout(() => gato.remove(), 4000);
+        }, i * 500);
+      }
+    }
+
+    window.onload = telaInicial;
+  </script>
+</body>
+</html>
